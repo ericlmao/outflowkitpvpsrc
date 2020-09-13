@@ -48,4 +48,9 @@ commands:
   resetstats:
     usage: /<command>
   build:
-    usage: /<command>'
+    usage: /<command>
+  repair:
+    usage: /<command>
+  refill:
+    aliases: [soup]
+    usage: /<command>

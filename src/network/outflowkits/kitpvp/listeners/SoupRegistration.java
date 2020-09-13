@@ -27,7 +27,7 @@ public class SoupRegistration implements Listener {
             if (plugin.soup.contains(player)) return;
             if (player.getHealth() == player.getMaxHealth())return;
             plugin.soup.add(player);
-            double toHeal = Math.min(player.getHealth() + 7.0, 20.0);
+            double toHeal = Math.min(player.getHealth() + 7.0, player.getMaxHealth());
             player.setHealth(toHeal);
             new BukkitRunnable(){
                 @Override
@@ -51,7 +51,7 @@ public class SoupRegistration implements Listener {
             }
             if (player.getHealth() == player.getMaxHealth())return;
             plugin.soup.add(player);
-            double toHeal = Math.min(player.getHealth() + 7.0, 20.0);
+            double toHeal = Math.min(player.getHealth() + 7.0, player.getMaxHealth());
             player.setHealth(toHeal);
             new BukkitRunnable(){
                 @Override

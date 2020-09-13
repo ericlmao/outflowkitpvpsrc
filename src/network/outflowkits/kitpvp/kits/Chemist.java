@@ -14,9 +14,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -113,7 +115,25 @@ public class Chemist implements Listener {
         item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         return item;
     }
-
+    @EventHandler
+    public void launchpots(PlayerInteractEvent event){
+        Player player = event.getPlayer();
+        if (event.getItem() == null)return;
+        ItemStack item = event.getItem();
+        if (item.getType() == Material.POTION){
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR){
+                PlayerManagement management = new PlayerManagement(player);
+                if (management.getKit().equals("Chemist")){
+                    if (!Utils.canUseAbility(player)){
+                        event.setCancelled(true);
+                        player.updateInventory();
+                        Utils.sendMessage(player, "&c&lYou cannot use abilities while in a protected area");
+                        Utils.playSound(player, Sound.VILLAGER_NO);
+                    }
+                }
+            }
+        }
+    }
     @EventHandler
     public void ability(PlayerInteractEvent event){
         if (event.getItem() == null)return;

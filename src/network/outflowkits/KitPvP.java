@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,6 +29,15 @@ public class KitPvP extends JavaPlugin {
     public HashMap<Player, Double> combat = new HashMap<>();
     public HashMap<Player, Player> combatwith = new HashMap<>();
     public HashMap<Player, Double> enderpearl_cooldown = new HashMap<>();
+
+    public HashMap<Player, Integer> repair_warmup = new HashMap<>();
+    public HashMap<Player, Integer> repair_warmup_location_x = new HashMap<>();
+    public HashMap<Player, Integer> repair_warmup_location_z = new HashMap<>();
+
+    public HashMap<Player, Integer> refill_warmup = new HashMap<>();
+    public HashMap<Player, Integer> refill_warmup_location_x = new HashMap<>();
+    public HashMap<Player, Integer> refill_warmup_location_z = new HashMap<>();
+
     public HashMap<Player, Integer> spawn_warmup = new HashMap<>();
     public HashMap<Player, Integer> spawn_warmup_location_x = new HashMap<>();
     public HashMap<Player, Integer> spawn_warmup_location_z = new HashMap<>();
@@ -44,7 +54,6 @@ public class KitPvP extends JavaPlugin {
 
     public HashMap<Player, Double> dwarf_cooldown = new HashMap<>();
     public HashMap<Player, Integer> dwarf_warmup = new HashMap<>();
-    public ArrayList<Player> dwarf_ready = new ArrayList<>();
 
     public HashMap<Player, Double> stomper_cooldown = new HashMap<>();
 
@@ -92,6 +101,9 @@ public class KitPvP extends JavaPlugin {
         this.getCommand("convert").setExecutor(new ConvertCMD());
         this.getCommand("leaderboards").setExecutor(new LeaderboardCMD());
         this.getCommand("build").setExecutor(new BuildCMD());
+
+        this.getCommand("repair").setExecutor(new RepairCMD());
+        this.getCommand("refill").setExecutor(new RefillCMD());
 
     }
 
@@ -161,8 +173,10 @@ public class KitPvP extends JavaPlugin {
         BukkitTask kangarooRunnable = new KangarooAbilityRunnable().runTaskTimer(this, 0, 2); // Kangaroo Ability
         BukkitTask ninjaRunnable = new NinjaAbilityRunnable().runTaskTimer(this, 0, 2); // Ninja Ability
         BukkitTask stomperRunnable = new StomperAbilityRunnable().runTaskTimer(this, 0, 2); // Stomper Ability
-        BukkitTask dwarfRunnable = new DwarfAbilityRunnable().runTaskTimer(this, 0, 2); // Dwarf Ability
         BukkitTask switcherRunnable = new SwitcherAbilityRunnable().runTaskTimer(this, 0, 2); // Archer Ability
+
+        BukkitTask repairRunnable = new RepairRunnable().runTaskTimer(this, 0, 20); // Repair Warmup
+        BukkitTask refillRunnable = new RefillRunnable().runTaskTimer(this, 0, 20); // Refill Warmup
 
         BukkitTask soupRunnable = new SoupRunnable().runTaskTimer(this, 0, 5); // Soup break fix
 

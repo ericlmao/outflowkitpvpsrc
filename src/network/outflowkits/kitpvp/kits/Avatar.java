@@ -64,7 +64,7 @@ public class Avatar implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7Right-Click to activate the Water Gun Ability!"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&bWater Gun &7will apply players around you with"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slowness 5, for 10 seconds!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slowness 3, for 5 seconds!"));
 
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -114,7 +114,7 @@ public class Avatar implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    plugin.avatar_cooldown.put(event.getPlayer(), 25.0);
+                    plugin.avatar_cooldown.put(event.getPlayer(), 30.0);
                     shootBullet(event.getPlayer());
                 }
             }
@@ -151,7 +151,7 @@ public class Avatar implements Listener {
                     return;
                 }
                 if (management.getKit().equals("Avatar")) {
-                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 10, 4));
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 5, 2));
                     event.setDamage(5.5);
 
                     Utils.sendMessage(shooter, "&aYou have shot &e" + victim.getName() + " &awith &b&lWater Gun&a!");

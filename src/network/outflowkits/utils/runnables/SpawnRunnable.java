@@ -52,6 +52,8 @@ public class SpawnRunnable extends BukkitRunnable {
 
                 if (time <= 0){
                     plugin.spawn_warmup.remove(player);
+                    plugin.spawn_warmup_location_x.remove(player);
+                    plugin.spawn_warmup_location_z.remove(player);
                     plugin.enderpearl_cooldown.remove(player);
 
                     if (plugin.combat.containsKey(player)){

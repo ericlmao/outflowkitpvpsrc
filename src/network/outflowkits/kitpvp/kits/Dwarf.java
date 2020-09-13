@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Dwarf implements Listener {
     private KitPvP plugin;
@@ -47,11 +48,8 @@ public class Dwarf implements Listener {
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lDwarf's Trusty Axe"));
         ArrayList<String> lore = new ArrayList<>();
 
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Shift up to 5 seconds to be able to activate"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&6&lDwarf YEET"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', " "));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Dwarf YEET will send your enemies flying while doubling"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&7the initial damage dealt to the player!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&7When you attack a player, you have a chance"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&7to do double damage!"));
 
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -91,38 +89,16 @@ public class Dwarf implements Listener {
     public void ability(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player){
             if (event.getEntity() instanceof Player){
-                Player victim = (Player) event.getEntity();
                 Player attacker = (Player) event.getDamager();
 
                 if (attacker.getInventory().getItemInHand().getType() == Material.GOLD_AXE){
                     PlayerManagement attackerManagement = new PlayerManagement(attacker);
                     if (attackerManagement.getKit().equals("Dwarf")) {
-                        if (attacker.isSneaking()) {
-                            if (!Utils.canUseAbility(attacker)){
-                                event.setCancelled(true);
-                                Utils.sendMessage(attacker, "&c&lYou cannot use abilities while in a protected area");
-                                Utils.playSound(attacker, Sound.VILLAGER_NO);
-                                return;
-                            }
-                            if (plugin.dwarf_cooldown.containsKey(attacker)){
-                                double time = plugin.dwarf_cooldown.get(attacker);
-                                DecimalFormat df = new DecimalFormat("###,###.#");
-                                Utils.sendMessage(attacker, "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
-                                event.setCancelled(true);
-                                return;
-                            }
-                            if (plugin.dwarf_warmup.containsKey(attacker)) {
-                                if (plugin.dwarf_warmup.get(attacker) < 5) {
-                                    Utils.sendMessage(attacker, "&c&lYour ability is not fully charged yet!");
-                                    event.setCancelled(true);
-                                    attacker.updateInventory();
-                                } else {
-                                    yeetPlayer(attacker, victim);
-                                    plugin.dwarf_cooldown.put(attacker, 30.0);
-                                    plugin.dwarf_warmup.remove(attacker);
-                                    event.setDamage(event.getDamage() * 2);
-                                }
-                            }
+                        Random random = new Random();
+                        int chance = random.nextInt(100);
+                        if (chance <= 2){
+                            event.setDamage(event.getDamage() * 2);
+                            Utils.playSound(attacker, Sound.SUCCESSFUL_HIT);
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class KitSelector implements Listener {
     private KitPvP plugin;
@@ -26,6 +30,21 @@ public class KitSelector implements Listener {
     public KitSelector(){
         plugin = KitPvP.getPlugin(KitPvP.class);
     }
+
+    public ItemStack getKitUnlockers(Player player){
+        PlayerManagement management = new PlayerManagement(player);
+
+        ItemStack item = new ItemStack(Material.ANVIL);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lKit Unlockers"));
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&7You have &a" + management.getKitUnlockers() + " &7Kit Unlockers left!"));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
     @EventHandler
     public void kitselectoruse(PlayerInteractEvent event){
         Player player = event.getPlayer();
@@ -33,76 +52,81 @@ public class KitSelector implements Listener {
         if (!(player.getInventory().getItemInHand().hasItemMeta()))return;
         if (!(player.getInventory().getItemInHand().getItemMeta().hasDisplayName()))return;
         if (player.getInventory().getItemInHand().getItemMeta().getDisplayName().equals(ChatColor.translateAlternateColorCodes('&', "&BKit Selector"))){
-            if (!Utils.isInMainWorld(player)){
-                Utils.sendMessage(player, "&cYou cannot use this in this world.");
-                return;
-            }
-            Inventory inv = Bukkit.createInventory(null, 54, ChatColor.AQUA + "Select a Kit");
-
-            ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
-            ItemMeta fillerMeta = filler.getItemMeta();
-
-            fillerMeta.setDisplayName(" ");
-            filler.setItemMeta(fillerMeta);
-
-            for (int i = 0; i < 9; i++) {
-                inv.setItem(i, filler);
-            }
-            for (int i = 45; i < 54; i++) {
-                inv.setItem(i, filler);
-            }
-            inv.setItem(9, PvP.getSelectorIcon(player));
-
-            PlayerManagement management = new PlayerManagement(player);
-
-            if (management.getUnlockedKits().contains("Barbarian")){
-                inv.addItem(Barbarian.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Chemist")){
-                inv.addItem(Chemist.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Fisherman")){
-                inv.addItem(Fisherman.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Avatar")){
-                inv.addItem(Avatar.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Kidnapper")){
-                inv.addItem(Kidnapper.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Mario")){
-                inv.addItem(Mario.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Kangaroo")){
-                inv.addItem(Kangaroo.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Ninja")){
-                inv.addItem(Ninja.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Stomper")){
-                inv.addItem(Stomper.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Dwarf")){
-                inv.addItem(Dwarf.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Teleporter")){
-                inv.addItem(Teleporter.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Switcher")){
-                inv.addItem(Switcher.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Gank")){
-                inv.addItem(Gank.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Snowman")){
-                inv.addItem(Dwarf.getSelectorIcon(player));
-            }
-            if (management.getUnlockedKits().contains("Tank")){
-                inv.addItem(Tank.getSelectorIcon(player));
-            }
-
-            player.openInventory(inv);
+            openselector(player);
         }
+    }
+
+    private void openselector(Player player) {
+        if (!Utils.isInMainWorld(player)){
+            Utils.sendMessage(player, "&cYou cannot use this in this world.");
+            return;
+        }
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.AQUA + "Select a Kit");
+
+        ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+        ItemMeta fillerMeta = filler.getItemMeta();
+
+        fillerMeta.setDisplayName(" ");
+        filler.setItemMeta(fillerMeta);
+
+        for (int i = 0; i < 9; i++) {
+            inv.setItem(i, filler);
+        }
+        for (int i = 45; i < 54; i++) {
+            inv.setItem(i, filler);
+        }
+        inv.setItem(9, PvP.getSelectorIcon(player));
+        inv.setItem(49, getKitUnlockers(player));
+
+        PlayerManagement management = new PlayerManagement(player);
+
+        if (management.getUnlockedKits().contains("Barbarian")){
+            inv.addItem(Barbarian.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Chemist")){
+            inv.addItem(Chemist.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Fisherman")){
+            inv.addItem(Fisherman.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Avatar")){
+            inv.addItem(Avatar.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Kidnapper")){
+            inv.addItem(Kidnapper.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Mario")){
+            inv.addItem(Mario.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Kangaroo")){
+            inv.addItem(Kangaroo.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Ninja")){
+            inv.addItem(Ninja.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Stomper")){
+            inv.addItem(Stomper.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Dwarf")){
+            inv.addItem(Dwarf.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Teleporter")){
+            inv.addItem(Teleporter.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Switcher")){
+            inv.addItem(Switcher.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Gank")){
+            inv.addItem(Gank.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Snowman")){
+            inv.addItem(Dwarf.getSelectorIcon(player));
+        }
+        if (management.getUnlockedKits().contains("Tank")){
+            inv.addItem(Tank.getSelectorIcon(player));
+        }
+
+        player.openInventory(inv);
     }
 
 
@@ -115,13 +139,13 @@ public class KitSelector implements Listener {
             if (!(event.getCurrentItem().hasItemMeta()))return;
             if (!(event.getCurrentItem().getItemMeta().hasDisplayName()))return;
             String name = event.getCurrentItem().getItemMeta().getDisplayName();
+            // PvP Kit
             if (name.equals(ChatColor.translateAlternateColorCodes('&', "&aPvP"))){
                 player.getInventory().clear();
                 for (PotionEffect effect : player.getActivePotionEffects()) {
                     player.removePotionEffect(effect.getType());
                 }
                 PvP.getKit(player);
-
                 player.closeInventory();
 
                 Bukkit.getPluginManager().callEvent(new KitSelectEvent(player, "PvP"));
@@ -281,6 +305,37 @@ public class KitSelector implements Listener {
                 player.closeInventory();
 
                 Bukkit.getPluginManager().callEvent(new KitSelectEvent(player, "Tank"));
+            }
+
+            if (name.equals(ChatColor.translateAlternateColorCodes('&', "&a&lKit Unlockers"))){
+                PlayerManagement management = new PlayerManagement(player);
+                if (management.getKitUnlockers() == 0) {
+                    Utils.sendMessage(player, "&cYou do not have any Kit Unlockers left.");
+                    Utils.playSound(player, Sound.VILLAGER_NO);
+                    openselector(player);
+                    return;
+                }
+                List<String> unlockable = management.getKits();
+                List<String> unlocked = management.getUnlockedKits();
+
+                Random random = new Random();
+                int randomNumber = random.nextInt(unlockable.size());
+                String unlockerSelected = unlockable.get(randomNumber);
+
+                for (String kitsunlocked : unlocked) {
+                    if (unlockerSelected.equals(kitsunlocked)) {
+                        management.removeKitUnlockers(1);
+                        management.addCoins(5000);
+                        Utils.sendMessage(player, "&7The Kit Unlocker has granted you the &a" + unlockerSelected + " &7kit, but because you have it already unlocked you have been given &a5,000 Coins&7.");
+                        Utils.playSound(player, Sound.ANVIL_USE);
+                        openselector(player);
+                        return;
+                    }
+                }
+                management.unlockKit(unlockerSelected);
+                Utils.playSound(player, Sound.ANVIL_USE);
+                Utils.sendMessage(player, "&7The Kit Unlocker has granted you the &a" + unlockerSelected + " &7kit.");
+                openselector(player);
             }
         }
     }

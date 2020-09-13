@@ -103,9 +103,15 @@ public class Death implements Listener {
 
             Utils.sendMessage(victim, "&7&lYou have been killed by &c&l" + killer.getName() + "&7&l!");
 
-            ItemStack soup = new ItemStack(Material.MUSHROOM_SOUP);
+
+            ItemStack item;
+            if (killerManagement.potionsEnabled()){
+                item = new ItemStack(Material.POTION,1, (short) 16421);
+            } else {
+                item = new ItemStack(Material.MUSHROOM_SOUP);
+            }
             for (int i = 0; i < 6; i++) {
-                killer.getInventory().addItem(soup);
+                killer.getInventory().addItem(item);
             }
             PlayerManagement victimManagement = new PlayerManagement(victim);
             int victimks = victimManagement.getCurrentKillStreak();
