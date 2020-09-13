@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Outflow KitPvP:jar">
+    <output-path>$USER_HOME$/Documents/Minecraft/Personal Servers/Dev Servers/Verio KitPvP Dev Server/plugins</output-path>
+    <root id="archive" name="Outflow KitPvP.jar">
+      <element id="module-output" name="Outflow KitPvP" />
+    </root>
+  </artifact>
+</component>

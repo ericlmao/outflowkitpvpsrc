@@ -1,0 +1,51 @@
+name: OutflowKitPvP
+version: 1.0
+description: Outflow Network KitPvP Core
+author: Negative
+main: network.outflowkits.KitPvP
+
+commands:
+  leaderboards:
+    usage: /<command>
+    aliases:
+      - lb
+  kit:
+    usage: /<command>
+  convert:
+    usage: /<command>
+  combattimer:
+    aliases:
+      - ct
+    description: Check your combat timer
+    usage: /<command>
+  spawn:
+    usage: /<command>
+  kitunlocker:
+    aliases: [unlockkit, uk, ku]
+    usage: /<command>
+  bal:
+    usage: /<command>
+  topkills:
+    usage: /<command>
+  topdeaths:
+    usage: /<command>
+  topcoins:
+    usage: /<command>
+  topks:
+    aliases:
+      - topkillstreak
+      - topkillstreaks
+    usage: /<command>
+  stats:
+    aliases:
+      - viewstats
+      - statistics
+    usage: /<command>
+  xp:
+    usage: /<command>
+  addxp:
+    usage: /<command>
+  resetstats:
+    usage: /<command>
+  build:
+    usage: /<command>'
