@@ -52,9 +52,6 @@ public class KitPvP extends JavaPlugin {
     public HashMap<Player, Double> ninja_cooldown = new HashMap<>();
     public HashMap<Player, Double> switcher_cooldown = new HashMap<>();
 
-    public HashMap<Player, Double> dwarf_cooldown = new HashMap<>();
-    public HashMap<Player, Integer> dwarf_warmup = new HashMap<>();
-
     public HashMap<Player, Double> stomper_cooldown = new HashMap<>();
 
     public HashMap<Player, Double> kidnapper_cooldown = new HashMap<>();

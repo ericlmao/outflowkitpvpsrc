@@ -65,6 +65,14 @@ public class DeleteBowls implements Listener {
                     return;
                 }
             }
+            case RED_MUSHROOM:{
+                PlayerManagement management = new PlayerManagement(player);
+                if (management.getKit().equals("Mario")){
+                    event.setCancelled(true);
+                    player.updateInventory();
+                    return;
+                }
+            }
             case ANVIL:{
                 PlayerManagement management = new PlayerManagement(player);
                 if (management.getKit().equals("Stomper")){

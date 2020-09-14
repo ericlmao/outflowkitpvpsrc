@@ -40,7 +40,7 @@ public class Fisherman implements Listener {
 
         player.updateInventory();
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 0));
     }
 
 
@@ -138,16 +138,16 @@ public class Fisherman implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7KDR &c" + df.format(kdr)));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lArmor"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Golden Helmet (Protection 1, Unbreaking 5)"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Iron Chestplate (Unbreaking 2)"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Iron Leggings (Unbreaking 2)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Golden Helmet (Protection 2, Unbreaking 10)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Iron Chestplate (Protection 3, Unbreaking 2)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Iron Leggings (Protection 3, Unbreaking 2)"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Golden Boots (Protection 1, Unbreaking 5)"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lWeapons"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Diamond Sword (Sharpness 1)"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lPotion Effects"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 None"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Speed 1"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lAbilities"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &a&lFisherman's Reel"));
