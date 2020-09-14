@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class Fisherman implements Listener {
         player.getInventory().setItem(1, getAbilityItem());
 
         player.updateInventory();
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 1));
     }
 
 
@@ -48,32 +52,36 @@ public class Fisherman implements Listener {
     }
 
     private static ItemStack getAbilityItem() {
-        return new ItemStack(Material.FISHING_ROD);
+        ItemStack item = new ItemStack(Material.FISHING_ROD);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
+        return item;
     }
 
     private static ItemStack getHelmet() {
         ItemStack item = new ItemStack(Material.GOLD_HELMET);
-        item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 5);
+        item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
         return item;
     }
 
     private static ItemStack getChestplate() {
         ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
+        item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 2);
         return item;
     }
 
     private static ItemStack getLeggings() {
         ItemStack item = new ItemStack(Material.IRON_LEGGINGS);
+        item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 2);
         return item;
     }
 
     private static ItemStack getBoots() {
         ItemStack item = new ItemStack(Material.GOLD_BOOTS);
-        item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 5);
+        item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 
         return item;
     }

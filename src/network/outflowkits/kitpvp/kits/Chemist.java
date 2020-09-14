@@ -155,7 +155,7 @@ public class Chemist implements Listener {
                         return;
                     }
                     smokeBombActivate(event.getPlayer());
-                    plugin.chemist_cooldown.put(event.getPlayer(), 30.0);
+                    plugin.chemist_cooldown.put(event.getPlayer(), 45.0);
                 }
             }
         }
@@ -171,8 +171,8 @@ public class Chemist implements Listener {
             if (entity instanceof Player){
                 Player p = (Player) entity;
                 if (p.getGameMode() == GameMode.SURVIVAL) {
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 16, 3));
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 8, 3));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 8, 1));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 9, 3));
 
                     Utils.sendMessage(p, "&c&l" + player.getName() + " &7has hit you with a &8&lSmoke Bomb&7!");
                     playersHit.add(p.getName());
@@ -195,40 +195,6 @@ public class Chemist implements Listener {
 
         Utils.sendMessage(player, message);
 
-    }
-
-    @EventHandler
-    public void chemistKill(PlayerDeathEvent event){
-        Player killer = event.getEntity().getKiller();
-
-        PlayerManagement management = new PlayerManagement(killer);
-
-        if (management.getKit().equals("Chemist")){
-            ItemStack damage = new ItemStack(Material.POTION, 1, (short)16460);
-            ItemMeta damageMeta = damage.getItemMeta();
-            damageMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&5&lInstant Damage Potion &7(Splash)"));
-            damage.setItemMeta(damageMeta);
-
-            ItemStack poison = new ItemStack(Material.POTION, 2, (short)16388);
-            ItemMeta poisonMeta = poison.getItemMeta();
-            poisonMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&2&lPoison Potion &7(Splash)"));
-            poison.setItemMeta(poisonMeta);
-
-            if (!killer.getInventory().contains(damage)){
-                for (int i = 0; i < 3; i++) {
-                    killer.getInventory().addItem(damage);
-                }
-            } else {
-                killer.getInventory().addItem(damage);
-            }
-            if (!killer.getInventory().contains(poison)){
-                for (int i = 0; i < 2; i++) {
-                    killer.getInventory().addItem(poison);
-                }
-            } else {
-                killer.getInventory().addItem(poison);
-            }
-        }
     }
 
     public static ItemStack getSelectorIcon(Player player){
@@ -266,7 +232,7 @@ public class Chemist implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lAbilities"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &8&lSmoke Bomb"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &7On Right-Click, will apply players around you with"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', " &7Slowness, Nausea, and Blindness, for 15 seconds!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', " &7Slowness, and Blindness, for 8 seconds!"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&bClick to select"));
         meta.setLore(lore);

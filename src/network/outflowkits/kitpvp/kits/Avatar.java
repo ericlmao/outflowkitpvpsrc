@@ -155,7 +155,7 @@ public class Avatar implements Listener {
                     event.setDamage(5.5);
 
                     Utils.sendMessage(shooter, "&aYou have shot &e" + victim.getName() + " &awith &b&lWater Gun&a!");
-                    Utils.sendMessage(victim, "&cYou have been shot by &e" + shooter.getName() + " &clusing &b&lWater Gun&c!");
+                    Utils.sendMessage(victim, "&cYou have been shot by &e" + shooter.getName() + " &cusing &b&lWater Gun&c!");
                 }
             }
         }

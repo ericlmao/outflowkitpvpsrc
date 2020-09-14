@@ -16,7 +16,6 @@ public class SoupRunnable extends BukkitRunnable {
         for (Player player : Bukkit.getOnlinePlayers()){
             if (plugin.soup.contains(player)){
                 new BukkitRunnable(){
-
                     @Override
                     public void run() {
                         if (plugin.soup.contains(player)){

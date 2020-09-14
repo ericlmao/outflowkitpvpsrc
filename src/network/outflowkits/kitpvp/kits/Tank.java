@@ -81,7 +81,7 @@ public class Tank {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Diamond Boots"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lWeapons"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Stonw Sword"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Stone Sword"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lPotion Effects"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Slowness 1"));
