@@ -66,6 +66,9 @@ public class SpawnCMD implements CommandExecutor {
                 plugin.spawn_warmup_location_x.put(player, x);
                 plugin.spawn_warmup_location_z.put(player, z);
                 plugin.spawn_warmup.put(player, 5);
+
+                Utils.sendMessage(player, "&a&lSpawn teleportation commencing! Do not move!");
+                Utils.playSound(player, Sound.CLICK);
             }
             return true;
         }

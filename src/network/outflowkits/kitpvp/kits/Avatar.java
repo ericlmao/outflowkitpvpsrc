@@ -64,7 +64,7 @@ public class Avatar implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&7Right-Click to activate the Water Gun Ability!"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&bWater Gun &7will apply players around you with"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slowness 3, for 5 seconds!"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&7Slowness 2, for 5 seconds!"));
 
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -79,14 +79,14 @@ public class Avatar implements Listener {
     private static ItemStack getChestplate() {
         ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
         item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 25);
         return item;
     }
 
     private static ItemStack getLeggings() {
         ItemStack item = new ItemStack(Material.LEATHER_LEGGINGS);
         item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
-        item.addUnsafeEnchantment(Enchantment.DURABILITY, 20);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 25);
         return item;
     }
 
@@ -151,24 +151,11 @@ public class Avatar implements Listener {
                     return;
                 }
                 if (management.getKit().equals("Avatar")) {
-                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 5, 2));
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 5, 1));
                     event.setDamage(5.5);
 
                     Utils.sendMessage(shooter, "&aYou have shot &e" + victim.getName() + " &awith &b&lWater Gun&a!");
                     Utils.sendMessage(victim, "&cYou have been shot by &e" + shooter.getName() + " &cusing &b&lWater Gun&c!");
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void damage(EntityDamageEvent event){
-        if (event.getEntity() instanceof Player){
-            Player player = (Player) event.getEntity();
-            PlayerManagement management = new PlayerManagement(player);
-            if (management.getKit().equals("Avatar")){
-                if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
-                    event.setCancelled(true);
                 }
             }
         }

@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
@@ -42,6 +44,8 @@ public class Stomper implements Listener {
         player.getInventory().setItem(1, getAbilityItem());
 
         player.updateInventory();
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 180000, 0));
     }
 
     private static ItemStack getAbilityItem() {
@@ -234,7 +238,7 @@ public class Stomper implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Iron Sword"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lPotion Effects"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 None"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Speed 1"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lAbilities"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &9&lStomper"));

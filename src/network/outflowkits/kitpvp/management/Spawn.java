@@ -79,7 +79,7 @@ public class Spawn {
     }
 
     private ItemStack getShop(){
-        ItemStack item = new ItemStack(Material.CHEST);
+        ItemStack item = new ItemStack(Material.EMERALD);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.GOLD + "Kit Shop");
@@ -98,7 +98,7 @@ public class Spawn {
     }
 
     private ItemStack getSettings(){
-        ItemStack item = new ItemStack(Material.WATCH);
+        ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(ChatColor.DARK_AQUA + "User Settings");

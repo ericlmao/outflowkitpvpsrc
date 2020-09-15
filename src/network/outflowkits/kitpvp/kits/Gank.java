@@ -25,13 +25,13 @@ public class Gank {
         player.updateInventory();
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 180000, 1));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 180000, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 180000, 2));
     }
 
 
     private static ItemStack getSword() {
         ItemStack item = new ItemStack(Material.STONE_SWORD);
-        item.addEnchantment(Enchantment.DAMAGE_ALL, 3);
+        item.addEnchantment(Enchantment.DAMAGE_ALL, 4);
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
         return item;
     }
@@ -60,11 +60,11 @@ public class Gank {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 None"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lWeapons"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Stone Sword (Sharpness 3)"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Stone Sword (Sharpness 4)"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lPotion Effects"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Speed 2"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Resistance 2"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Resistance 3"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lAbilities"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &8None"));

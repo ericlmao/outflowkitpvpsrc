@@ -23,7 +23,7 @@ public class PlayerSettings implements  Listener {
     public void settingsItem(PlayerInteractEvent event){
         Player player = event.getPlayer();
         if (event.getItem() == null || event.getItem().getType() == Material.AIR)return;
-        if (event.getItem().getType() == Material.WATCH){
+        if (event.getItem().getType() == Material.BOOK){
             if (!Utils.canUseAbility(player)){
                 event.setCancelled(true);
                 openSettings(player);

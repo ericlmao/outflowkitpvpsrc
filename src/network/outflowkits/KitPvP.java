@@ -120,7 +120,6 @@ public class KitPvP extends JavaPlugin {
         manager.registerEvents(new StatsCMD(), this);
         manager.registerEvents(new NoExplosion(), this);
         manager.registerEvents(new ChatListener(), this);
-        manager.registerEvents(new ComboCounter(), this);
         manager.registerEvents(new ItemPickup(), this);
         manager.registerEvents(new PlayerSettings(), this);
         manager.registerEvents(new ConvertCMD(), this);
