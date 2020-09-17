@@ -62,6 +62,8 @@ public class KitPvP extends JavaPlugin {
     public ArrayList<Player> leaderboardCooldown = new ArrayList<>();
     public ArrayList<Player> buildmode = new ArrayList<>();
 
+    public HashMap<Player, Player> target = new HashMap<>();
+
     public PlayerScoreboard scoreboard;
     public PlayerData data;
 
@@ -102,6 +104,8 @@ public class KitPvP extends JavaPlugin {
         this.getCommand("repair").setExecutor(new RepairCMD());
         this.getCommand("refill").setExecutor(new RefillCMD());
 
+        this.getCommand("target").setExecutor(new TargetCMD());
+
     }
 
     private void registerListeners() {
@@ -130,6 +134,8 @@ public class KitPvP extends JavaPlugin {
         manager.registerEvents(new UnlockKit(), this);
         manager.registerEvents(new BuildListener(), this);
         manager.registerEvents(new LeaveEvent(), this);
+
+        manager.registerEvents(new TargetCMD(), this);
 
         manager.registerEvents(new Barbarian(), this);
         manager.registerEvents(new Chemist(), this);
@@ -175,7 +181,6 @@ public class KitPvP extends JavaPlugin {
         BukkitTask refillRunnable = new RefillRunnable().runTaskTimer(this, 0, 20); // Refill Warmup
 
         BukkitTask soupRunnable = new SoupRunnable().runTaskTimer(this, 0, 5); // Soup break fix
-
 
     }
 

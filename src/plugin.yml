@@ -54,3 +54,5 @@ commands:
   refill:
     aliases: [soup]
     usage: /<command>
+  target:
+    usage: /<command>

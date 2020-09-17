@@ -1,9 +1,13 @@
 package network.outflowkits.utils;
 
+import me.activated.core.api.player.PlayerData;
+import me.activated.core.plugin.AquaCoreAPI;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import network.outflowkits.KitPvP;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -104,6 +108,48 @@ public class PlayerScoreboard implements Listener {
             kills = df.format(management.getKills());
             deaths = df.format(management.getDeaths());
 
+            PlayerData playerData = AquaCoreAPI.INSTANCE.getPlayerData(player.getUniqueId());
+            if (playerData.isInStaffMode()){
+                objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&9&lModerator Mode"));
+                boolean b = plugin.target.containsKey(player);
+                boolean vanished = playerData.isVanished();
+                if (b){
+                    Player target = plugin.target.get(player);
+                    replaceScore(objective, 8, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------&r"));
+                    replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', " "));
+                    replaceScore(objective, 7, ChatColor.translateAlternateColorCodes('&', "&7* &9Targeting: &f" + target.getName()));
+                    replaceScore(objective, 6, ChatColor.translateAlternateColorCodes('&', "  "));
+                    replaceScore(objective, 5, ChatColor.translateAlternateColorCodes('&', "&7* &9Your Ping: &f" + getPing(player) + "ms"));
+                    replaceScore(objective, 4, ChatColor.translateAlternateColorCodes('&', "&7* &9Target's Ping: &f" + getPing(target) + "ms"));
+                    replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', "   "));
+                    replaceScore(objective, 2, ChatColor.translateAlternateColorCodes('&', "&7* &9Vanished: &f" + vanished));
+                    replaceScore(objective, 1, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------"));
+
+
+                    if (objective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
+                        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                    }
+                    player.setScoreboard(score);
+                    return;
+                }
+                replaceScore(objective, 8, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------&r"));
+                replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', " "));
+                replaceScore(objective, 7, ChatColor.translateAlternateColorCodes('&', "&7* &9Targeting: &f/target"));
+                replaceScore(objective, 6, ChatColor.translateAlternateColorCodes('&', "  "));
+                replaceScore(objective, 5, ChatColor.translateAlternateColorCodes('&', "&7* &9Your Ping: &f" + getPing(player) + "ms"));
+                replaceScore(objective, 4, ChatColor.translateAlternateColorCodes('&', "&7* &9Target's Ping: &f/target"));
+                replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', "   "));
+                replaceScore(objective, 2, ChatColor.translateAlternateColorCodes('&', "&7* &9Vanished: &f" + vanished));
+                replaceScore(objective, 1, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------"));
+
+
+                if (objective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
+                    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                }
+                player.setScoreboard(score);
+                return;
+            }
+
             objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&9&lOutflow &7(KitPvP)"));
             replaceScore(objective, 9, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------&r"));
             replaceScore(objective, 8, ChatColor.translateAlternateColorCodes('&', "&7* &9Kills: &f" + kills));
@@ -121,5 +167,10 @@ public class PlayerScoreboard implements Listener {
             }
             player.setScoreboard(score);
         }
+    }
+
+    public static int getPing(Player player) {
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        return entityPlayer.ping;
     }
 }

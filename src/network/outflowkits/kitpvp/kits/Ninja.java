@@ -153,7 +153,7 @@ public class Ninja implements Listener {
                         @Override
                         public void run() {
                             player.removePotionEffect(PotionEffectType.SPEED);
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 0));
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 1));
                         }
                     }.runTaskLater(plugin, 20 * 5 + 1);
                     break;

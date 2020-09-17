@@ -47,7 +47,7 @@ public class Chemist implements Listener {
 
         player.updateInventory();
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 1800000, 1));
     }
 
 
@@ -227,7 +227,7 @@ public class Chemist implements Listener {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Stone Sword (Sharpness 1, Unbreaking 5)"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lPotion Effects"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Speed 1"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8 Speed 2"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " "));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&9&lAbilities"));
         lore.add(ChatColor.translateAlternateColorCodes('&', " &8&lSmoke Bomb"));
