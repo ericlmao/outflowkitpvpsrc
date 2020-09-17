@@ -116,7 +116,6 @@ public class PlayerScoreboard implements Listener {
                 if (b){
                     Player target = plugin.target.get(player);
                     replaceScore(objective, 8, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------&r"));
-                    replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', " "));
                     replaceScore(objective, 7, ChatColor.translateAlternateColorCodes('&', "&7* &9Targeting: &f" + target.getName()));
                     replaceScore(objective, 6, ChatColor.translateAlternateColorCodes('&', "  "));
                     replaceScore(objective, 5, ChatColor.translateAlternateColorCodes('&', "&7* &9Your Ping: &f" + getPing(player) + "ms"));
@@ -133,7 +132,6 @@ public class PlayerScoreboard implements Listener {
                     return;
                 }
                 replaceScore(objective, 8, ChatColor.translateAlternateColorCodes('&', "&7&m--------------------&r"));
-                replaceScore(objective, 3, ChatColor.translateAlternateColorCodes('&', " "));
                 replaceScore(objective, 7, ChatColor.translateAlternateColorCodes('&', "&7* &9Targeting: &f/target"));
                 replaceScore(objective, 6, ChatColor.translateAlternateColorCodes('&', "  "));
                 replaceScore(objective, 5, ChatColor.translateAlternateColorCodes('&', "&7* &9Your Ping: &f" + getPing(player) + "ms"));
