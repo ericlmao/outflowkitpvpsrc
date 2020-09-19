@@ -1,5 +1,10 @@
 package network.outflowkits;
 
+import network.outflowkits.clans.ClansManager;
+import network.outflowkits.clans.commands.ClanCMD;
+import network.outflowkits.clans.listeners.ClanChatTag;
+import network.outflowkits.clans.listeners.ClanStatisticsListener;
+import network.outflowkits.data.ClansData;
 import network.outflowkits.data.PlayerData;
 import network.outflowkits.kitpvp.commands.*;
 import network.outflowkits.kitpvp.commands.KitUnlocker;
@@ -25,7 +30,7 @@ import java.util.HashMap;
 
 public class KitPvP extends JavaPlugin {
 
-    // -- KITPVP --
+    // -- KITPVP -- \\
     public HashMap<Player, Double> combat = new HashMap<>();
     public HashMap<Player, Player> combatwith = new HashMap<>();
     public HashMap<Player, Double> enderpearl_cooldown = new HashMap<>();
@@ -67,6 +72,9 @@ public class KitPvP extends JavaPlugin {
     public PlayerScoreboard scoreboard;
     public PlayerData data;
 
+    // -- Clans -- \\
+    public ClansData clansData;
+
     @Override
     public void onEnable() {
         registerData();
@@ -105,6 +113,9 @@ public class KitPvP extends JavaPlugin {
         this.getCommand("refill").setExecutor(new RefillCMD());
 
         this.getCommand("target").setExecutor(new TargetCMD());
+
+        // Clans
+        this.getCommand("clans").setExecutor(new ClanCMD());
 
     }
 
@@ -157,6 +168,10 @@ public class KitPvP extends JavaPlugin {
         manager.registerEvents(new TopCoins(), this);
         manager.registerEvents(new TopKillstreak(), this);
 
+        // Clans
+        manager.registerEvents(new ClanChatTag(), this);
+        manager.registerEvents(new ClanStatisticsListener(), this);
+
 
     }
 
@@ -207,5 +222,16 @@ public class KitPvP extends JavaPlugin {
         data.setupData();
         data.saveData();
         data.reloadData();
+
+        clansData = new ClansData();
+        clansData.setupData();
+        clansData.saveData();
+        clansData.reloadData();
+    }
+
+    @Override
+    public void onDisable() {
+        ClansManager clans = new ClansManager();
+        clans.clearActiveInvites();
     }
 }

@@ -190,4 +190,46 @@ public class Leaderboard {
         return returnValue;
     }
 
+    public String topClanName(int position){
+        int newpos = position - 1;
+        ConfigurationSection cf = plugin.clansData.config.getConfigurationSection("clans");
+
+        List<Pair<String, Integer>> top = cf.getValues(false)
+                .entrySet()
+                .stream()
+                .sorted((a1, a2) -> {
+                    int points1 = ((MemorySection) a1.getValue()).getInt("kills");
+                    int points2 = ((MemorySection) a2.getValue()).getInt("kills");
+                    return points2 - points1;
+                })
+                .map(e -> Pair.of(e.getKey(), ((MemorySection) e.getValue()).getInt("kills")))
+                .collect(Collectors.toList());
+
+        Pair<String, Integer> thename = top.get(newpos);
+        String name = thename.getKey();
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+
+        return player.getName();
+    }
+
+    public int topClanValue(int position){
+        int newpos = position - 1;
+        ConfigurationSection cf = plugin.clansData.config.getConfigurationSection("clans");
+
+        List<Pair<String, Integer>> top = cf.getValues(false)
+                .entrySet()
+                .stream()
+                .sorted((a1, a2) -> {
+                    int points1 = ((MemorySection) a1.getValue()).getInt("kills");
+                    int points2 = ((MemorySection) a2.getValue()).getInt("kills");
+                    return points2 - points1;
+                })
+                .map(e -> Pair.of(e.getKey(), ((MemorySection) e.getValue()).getInt("kills")))
+                .collect(Collectors.toList());
+
+        Pair<String, Integer> thenumber = top.get(newpos);
+        int returnValue = thenumber.getValue();
+        return returnValue;
+    }
+
 }
