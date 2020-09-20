@@ -1,25 +1,24 @@
 package network.outflowkits.utils.runnables;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class FishermanAbilityRunnable  extends BukkitRunnable {
-    private KitPvP plugin;
-    public FishermanAbilityRunnable(){
-        plugin = KitPvP.getPlugin(KitPvP.class);
-    }
     @Override
     public void run() {
         for (Player player : Bukkit.getOnlinePlayers()){
-            if (plugin.fisherman_cooldown.containsKey(player)){
-                plugin.fisherman_cooldown.put(player, plugin.fisherman_cooldown.get(player) - 0.1);
+            CooldownManagement cooldown = new CooldownManagement(player);
+            if (cooldown.hasCooldown("Fisherman")){
+                long current = System.currentTimeMillis();
+                long cooldownInMills = cooldown.getCooldown("Fisherman");
 
-                if (plugin.fisherman_cooldown.get(player) <= 0){
-                    plugin.fisherman_cooldown.remove(player);
-                    Utils.sendMessage(player, "&aYour Ability &a&lFisherman's Reel &ais now ready.");
+                if (current > cooldownInMills){
+                    Utils.sendMessage(player, "&8[&9Ability&8] &a&lFisherman's Reel &7is now ready.");
+                    cooldown.removeCooldown("Fisherman");
                 }
             }
         }

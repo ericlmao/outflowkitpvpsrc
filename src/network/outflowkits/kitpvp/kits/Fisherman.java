@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.ChatColor;
@@ -98,10 +99,11 @@ public class Fisherman implements Listener {
                     Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                     return;
                 }
-                if (plugin.fisherman_cooldown.containsKey(event.getPlayer())){
-                    double time = plugin.fisherman_cooldown.get(event.getPlayer());
-                    DecimalFormat df = new DecimalFormat("###,###.#");
-                    Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                if (cooldowns.hasCooldown("Fisherman")){
+                    long cooldown = cooldowns.getCooldown("Fisherman");
+                    Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
+                    event.setCancelled(true);
                     return;
                 }
 
@@ -111,7 +113,7 @@ public class Fisherman implements Listener {
 
                     victim.teleport(player.getLocation());
 
-                    plugin.fisherman_cooldown.put(player, 10.0);
+                    cooldowns.setCooldown("Fisherman", 15);
                 }
             }
         }

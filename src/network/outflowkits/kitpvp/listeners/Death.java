@@ -29,7 +29,6 @@ public class Death implements Listener {
     public void kill(PlayerDeathEvent event){
         Player victim = event.getEntity();
         if (victim.getWorld().getName().equals("Kit")) {
-            resetCooldowns(victim);
             event.setDeathMessage("");
             event.getDrops().clear();
             if (!Utils.isInMainWorld(event.getEntity().getKiller())) return;
@@ -141,18 +140,6 @@ public class Death implements Listener {
         }
     }
 
-    private void resetCooldowns(Player player) {
-        plugin.stomper_cooldown.remove(player);
-        plugin.avatar_cooldown.remove(player);
-        plugin.barbarian_cooldown.remove(player);
-        plugin.chemist_cooldown.remove(player);
-        plugin.fisherman_cooldown.remove(player);
-        plugin.kangaroo_cooldown.remove(player);
-        plugin.kidnapper_cooldown.remove(player);
-        plugin.mario_cooldown.remove(player);
-        plugin.ninja_cooldown.remove(player);
-        plugin.switcher_cooldown.remove(player);
-    }
 
     private void ksreward(Player player) {
         PlayerManagement management = new PlayerManagement(player);

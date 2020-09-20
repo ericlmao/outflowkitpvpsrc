@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.leaderboards;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.Leaderboard;
 import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
@@ -250,22 +251,17 @@ public class TopKills implements Listener, CommandExecutor {
             if (!(event.getCurrentItem().getItemMeta().hasDisplayName()))return;
             String name = event.getCurrentItem().getItemMeta().getDisplayName();
             if (name.equals(ChatColor.translateAlternateColorCodes('&', "&a&lREFRESH"))){
-                if (!plugin.leaderboardCooldown.contains(player)) {
-                    opentopkills(player);
-                    Utils.sendMessage(player, "&eRefreshing leaderboard... This may take a few seconds.");
+                CooldownManagement cooldown = new CooldownManagement(player);
 
-                    plugin.leaderboardCooldown.add(player);
+                if (cooldown.hasCooldown("Leaderboard")){
+                    long current = cooldown.getCooldown("Leaderboard");
 
-                    new BukkitRunnable(){
-
-                        @Override
-                        public void run() {
-                            plugin.leaderboardCooldown.remove(player);
-                        }
-                    }.runTaskLater(plugin, 20 * 5);
-                } else {
-                    Utils.sendMessage(player, "&cPlease wait up to 5 seconds before refreshing the leaderboard again!");
+                    Utils.sendMessage(player, "&cPlease wait &e" + cooldown.formatCooldown(current) + " &cbefore refreshing the leaderboard again!");
+                    return;
                 }
+                opentopkills(player);
+                Utils.sendMessage(player, "&aRefreshing leaderboard... This may take a few seconds.");
+                cooldown.setCooldown("Leaderboard", 10);
             }
         }
     }

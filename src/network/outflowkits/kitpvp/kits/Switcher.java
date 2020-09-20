@@ -1,16 +1,19 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,12 +22,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Switcher implements Listener {
     private KitPvP plugin;
     public Switcher(){
         plugin = KitPvP.getPlugin(KitPvP.class);
     }
+
+    public ArrayList<UUID> snowballs = new ArrayList<>();
     public static void getKit(Player player){
 
         Utils.giveHealing(player);
@@ -140,23 +146,47 @@ public class Switcher implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR){
             if (event.getItem() == null || event.getItem().getType() == Material.AIR)return;
 
-            if (event.getItem().getType() == Material.SNOW_BALL){
-                event.setCancelled(true);
-                player.updateInventory();
-                if (!Utils.canUseAbility(event.getPlayer())){
-                    Utils.sendMessage(event.getPlayer(), "&c&lYou cannot use abilities while in a protected area");
-                    Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
-                    return;
-                }
-                if (plugin.switcher_cooldown.containsKey(event.getPlayer())){
-                    double time = plugin.switcher_cooldown.get(event.getPlayer());
-                    DecimalFormat df = new DecimalFormat("###,###.#");
-                    Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+            if (event.getItem().getType() == Material.SNOW_BALL) {
+                PlayerManagement management = new PlayerManagement(player);
+                if (management.getKit().equals("Switcher")) {
                     event.setCancelled(true);
-                    return;
+                    player.updateInventory();
+                    if (!Utils.canUseAbility(event.getPlayer())) {
+                        Utils.sendMessage(event.getPlayer(), "&c&lYou cannot use abilities while in a protected area");
+                        Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
+                        return;
+                    }
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Switcher")) {
+                        long cooldown = cooldowns.getCooldown("Switcher");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (snowballs.contains(player.getUniqueId())) {
+                        Utils.sendMessage(event.getPlayer(), "&c&lYou already have a Switcher Ball in the air!");
+                        Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
+                        event.setCancelled(true);
+                        return;
+                    }
+                    player.updateInventory();
+                    player.launchProjectile(Snowball.class);
+                    snowballs.add(player.getUniqueId());
                 }
-                player.updateInventory();
-                player.launchProjectile(Snowball.class);
+            }
+        }
+    }
+    @EventHandler
+    public void land(ProjectileHitEvent event){
+        Projectile projectile = event.getEntity();
+        if (projectile instanceof Snowball){
+            Player shooter = (Player) projectile.getShooter();
+
+            PlayerManagement management = new PlayerManagement(shooter);
+            if (management.getKit().equals("Switcher")) {
+                if (snowballs.contains(shooter.getUniqueId())){
+                    snowballs.remove(shooter.getUniqueId());
+                }
             }
         }
     }
@@ -186,7 +216,8 @@ public class Switcher implements Listener {
                             Utils.sendMessage(shooter, "&aYou have &6SWITCHED &awith &6" + victim.getName() + "&a.");
                             Utils.sendMessage(victim, "&aYou have &6SWITCHED &awith &6" + shooter.getName() + "&a.");
 
-                            plugin.switcher_cooldown.put(shooter, 25.0);
+                            CooldownManagement cooldowns = new CooldownManagement(shooter);
+                            cooldowns.setCooldown("Switcher", 30);
                         }
                     }
                 }

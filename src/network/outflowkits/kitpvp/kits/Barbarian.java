@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.*;
@@ -69,15 +70,15 @@ public class Barbarian implements Listener {
                         Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                         return;
                     }
-                    if (plugin.barbarian_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.barbarian_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Barbarian")){
+                        long cooldown = cooldowns.getCooldown("Barbarian");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
+                    cooldowns.setCooldown("Barbarian", 40);
                     barbarianStrength(event.getPlayer());
-                    plugin.barbarian_cooldown.put(event.getPlayer(), 40.0);
                 }
             }
         }

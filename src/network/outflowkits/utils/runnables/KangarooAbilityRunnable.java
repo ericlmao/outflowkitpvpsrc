@@ -1,25 +1,23 @@
 package network.outflowkits.utils.runnables;
 
-import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class KangarooAbilityRunnable extends BukkitRunnable {
-    private KitPvP plugin;
-    public KangarooAbilityRunnable(){
-        plugin = KitPvP.getPlugin(KitPvP.class);
-    }
     @Override
     public void run() {
         for (Player player : Bukkit.getOnlinePlayers()){
-            if (plugin.kangaroo_cooldown.containsKey(player)){
-                plugin.kangaroo_cooldown.put(player, plugin.kangaroo_cooldown.get(player) - 0.1);
+            CooldownManagement cooldown = new CooldownManagement(player);
+            if (cooldown.hasCooldown("Kangaroo")){
+                long current = System.currentTimeMillis();
+                long cooldownInMills = cooldown.getCooldown("Kangaroo");
 
-                if (plugin.kangaroo_cooldown.get(player) <= 0){
-                    plugin.kangaroo_cooldown.remove(player);
-                    Utils.sendMessage(player, "&aYour Ability &9&lRocket Jump &ais now ready.");
+                if (current > cooldownInMills){
+                    Utils.sendMessage(player, "&8[&9Ability&8] &9&lRocket Jump &7is now ready.");
+                    cooldown.removeCooldown("Kangaroo");
                 }
             }
         }

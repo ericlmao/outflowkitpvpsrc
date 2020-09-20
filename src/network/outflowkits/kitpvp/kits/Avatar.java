@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.ChatColor;
@@ -107,14 +108,14 @@ public class Avatar implements Listener {
                         Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                         return;
                     }
-                    if (plugin.avatar_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.avatar_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Avatar")){
+                        long cooldown = cooldowns.getCooldown("Avatar");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
-                    plugin.avatar_cooldown.put(event.getPlayer(), 30.0);
+                    cooldowns.setCooldown("Avatar", 30);
                     shootBullet(event.getPlayer());
                 }
             }
@@ -123,17 +124,6 @@ public class Avatar implements Listener {
 
     private void shootBullet(Player player) {
         player.launchProjectile(Snowball.class);
-    }
-    @EventHandler
-    public void launch(ProjectileLaunchEvent event){
-        Projectile projectile = event.getEntity();
-        Player shooter = (Player) projectile.getShooter();
-
-        PlayerManagement management = new PlayerManagement(shooter);
-
-        if (management.getKit().equals("Avatar")){
-            projectile.setCustomName(ChatColor.AQUA + "Water Bullet");
-        }
     }
 
     @EventHandler
@@ -144,13 +134,13 @@ public class Avatar implements Listener {
                 Player shooter = (Player) projectile.getShooter();
                 Player victim = (Player) event.getEntity();
                 PlayerManagement management = new PlayerManagement(shooter);
-                if (!Utils.canUseAbility(shooter)){
-                    event.setCancelled(true);
-                    Utils.sendMessage(shooter, "&c&lYou cannot use abilities while in a protected area");
-                    Utils.playSound(shooter, Sound.VILLAGER_NO);
-                    return;
-                }
                 if (management.getKit().equals("Avatar")) {
+                    if (!Utils.canUseAbility(shooter)) {
+                        event.setCancelled(true);
+                        Utils.sendMessage(shooter, "&c&lYou cannot use abilities while in a protected area");
+                        Utils.playSound(shooter, Sound.VILLAGER_NO);
+                        return;
+                    }
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 5, 1));
                     event.setDamage(5.5);
 

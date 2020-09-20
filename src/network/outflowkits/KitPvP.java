@@ -5,6 +5,7 @@ import network.outflowkits.clans.commands.ClanCMD;
 import network.outflowkits.clans.listeners.ClanChatTag;
 import network.outflowkits.clans.listeners.ClanStatisticsListener;
 import network.outflowkits.data.ClansData;
+import network.outflowkits.data.CooldownData;
 import network.outflowkits.data.PlayerData;
 import network.outflowkits.kitpvp.commands.*;
 import network.outflowkits.kitpvp.commands.KitUnlocker;
@@ -24,7 +25,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,7 +33,6 @@ public class KitPvP extends JavaPlugin {
     // -- KITPVP -- \\
     public HashMap<Player, Double> combat = new HashMap<>();
     public HashMap<Player, Player> combatwith = new HashMap<>();
-    public HashMap<Player, Double> enderpearl_cooldown = new HashMap<>();
 
     public HashMap<Player, Integer> repair_warmup = new HashMap<>();
     public HashMap<Player, Integer> repair_warmup_location_x = new HashMap<>();
@@ -48,29 +47,17 @@ public class KitPvP extends JavaPlugin {
     public HashMap<Player, Integer> spawn_warmup_location_z = new HashMap<>();
     public ArrayList<Player> soup = new ArrayList<>();
 
-    public HashMap<Player, Double> barbarian_cooldown = new HashMap<>();
-    public HashMap<Player, Double> fisherman_cooldown = new HashMap<>();
-    public HashMap<Player, Double> avatar_cooldown = new HashMap<>();
-    public HashMap<Player, Double> chemist_cooldown = new HashMap<>();
-    public HashMap<Player, Double> mario_cooldown = new HashMap<>();
-    public HashMap<Player, Double> kangaroo_cooldown = new HashMap<>();
-    public HashMap<Player, Double> ninja_cooldown = new HashMap<>();
-    public HashMap<Player, Double> switcher_cooldown = new HashMap<>();
-
-    public HashMap<Player, Double> stomper_cooldown = new HashMap<>();
-
-    public HashMap<Player, Double> kidnapper_cooldown = new HashMap<>();
     public HashMap<Player, Player> gulagplayers = new HashMap<>();
 
     public HashMap<Player, String> recentKit = new HashMap<>();
 
-    public ArrayList<Player> leaderboardCooldown = new ArrayList<>();
     public ArrayList<Player> buildmode = new ArrayList<>();
 
     public HashMap<Player, Player> target = new HashMap<>();
 
     public PlayerScoreboard scoreboard;
     public PlayerData data;
+    public CooldownData cooldowns;
 
     // -- Clans -- \\
     public ClansData clansData;
@@ -176,21 +163,22 @@ public class KitPvP extends JavaPlugin {
     }
 
     private void runRunnalbes() {
-        BukkitTask combatRunnable = new CombatRunnable().runTaskTimer(this, 0, 2); // Combat tag timer
-        BukkitTask enderpearlRunnable = new EnderPearlRunnable().runTaskTimer(this, 0, 2); // Enderpearl cooldown
-        BukkitTask scoreboardRunnable = new ScoreboardRunnable().runTaskTimer(this, 0, 1); // Scoreboard refresh
+        BukkitTask combatRunnable = new CombatRunnable().runTaskTimer(this, 0, 20); // Combat tag timer
+        BukkitTask enderpearlRunnable = new EnderPearlRunnable().runTaskTimer(this, 0, 20); // Enderpearl cooldown
+        BukkitTask scoreboardRunnable = new ScoreboardRunnable().runTaskTimer(this, 0, 5); // Scoreboard refresh
         BukkitTask spawnRunnalbe = new SpawnRunnable().runTaskTimer(this, 0, 20); // Spawn warmup
+        BukkitTask lbRunnalbe = new LeaderboardRunnable().runTaskTimer(this, 0, 20); // Spawn warmup
 
-        BukkitTask barbarianRunnable = new BarbarianAbilityRunnable().runTaskTimer(this, 0, 2); // Barbarian Ability
-        BukkitTask fishermanRunnable = new FishermanAbilityRunnable().runTaskTimer(this, 0, 2); // Fisherman Ability
-        BukkitTask avatarRunnable = new AvatarAbilityRunnable().runTaskTimer(this, 0, 2); // Avatar Ability
-        BukkitTask kidnapperRunnable = new KidnapperAbilityRunnable().runTaskTimer(this, 0, 2); // Kidnapper Ability
-        BukkitTask chemistRunnable = new ChemistAbilityRunnable().runTaskTimer(this, 0, 2); // Chemist Ability
-        BukkitTask marioRunnable = new MarioAbilityRunnable().runTaskTimer(this, 0, 2); // Mario Ability
-        BukkitTask kangarooRunnable = new KangarooAbilityRunnable().runTaskTimer(this, 0, 2); // Kangaroo Ability
-        BukkitTask ninjaRunnable = new NinjaAbilityRunnable().runTaskTimer(this, 0, 2); // Ninja Ability
-        BukkitTask stomperRunnable = new StomperAbilityRunnable().runTaskTimer(this, 0, 2); // Stomper Ability
-        BukkitTask switcherRunnable = new SwitcherAbilityRunnable().runTaskTimer(this, 0, 2); // Archer Ability
+        BukkitTask barbarianRunnable = new BarbarianAbilityRunnable().runTaskTimer(this, 0, 20); // Barbarian Ability
+        BukkitTask fishermanRunnable = new FishermanAbilityRunnable().runTaskTimer(this, 0, 20); // Fisherman Ability
+        BukkitTask avatarRunnable = new AvatarAbilityRunnable().runTaskTimer(this, 0, 20); // Avatar Ability
+        BukkitTask kidnapperRunnable = new KidnapperAbilityRunnable().runTaskTimer(this, 0, 20); // Kidnapper Ability
+        BukkitTask chemistRunnable = new ChemistAbilityRunnable().runTaskTimer(this, 0, 20); // Chemist Ability
+        BukkitTask marioRunnable = new MarioAbilityRunnable().runTaskTimer(this, 0, 20); // Mario Ability
+        BukkitTask kangarooRunnable = new KangarooAbilityRunnable().runTaskTimer(this, 0, 20); // Kangaroo Ability
+        BukkitTask ninjaRunnable = new NinjaAbilityRunnable().runTaskTimer(this, 0, 20); // Ninja Ability
+        BukkitTask stomperRunnable = new StomperAbilityRunnable().runTaskTimer(this, 0, 20); // Stomper Ability
+        BukkitTask switcherRunnable = new SwitcherAbilityRunnable().runTaskTimer(this, 0, 20); // Archer Ability
 
         BukkitTask repairRunnable = new RepairRunnable().runTaskTimer(this, 0, 20); // Repair Warmup
         BukkitTask refillRunnable = new RefillRunnable().runTaskTimer(this, 0, 20); // Refill Warmup
@@ -227,6 +215,11 @@ public class KitPvP extends JavaPlugin {
         clansData.setupData();
         clansData.saveData();
         clansData.reloadData();
+
+        cooldowns = new CooldownData();
+        cooldowns.setupData();
+        cooldowns.saveData();
+        cooldowns.reloadData();
     }
 
     @Override

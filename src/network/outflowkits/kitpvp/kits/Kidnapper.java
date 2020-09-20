@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.*;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,11 +28,13 @@ import org.bukkit.potion.PotionEffectType;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Kidnapper implements Listener {
     private KitPvP plugin;
 
     public HashMap<Player, Location> prelocation = new HashMap<>();
+    public ArrayList<UUID> snowballs = new ArrayList<>();
 
     public Kidnapper() {
         plugin = KitPvP.getPlugin(KitPvP.class);
@@ -135,10 +139,16 @@ public class Kidnapper implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    if (plugin.kidnapper_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.kidnapper_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    if (snowballs.contains(event.getPlayer().getUniqueId())) {
+                        Utils.sendMessage(event.getPlayer(), "&c&lYou already have a Snow Ball in the air!");
+                        Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
+                        event.setCancelled(true);
+                        return;
+                    }
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Kidnapper")){
+                        long cooldown = cooldowns.getCooldown("Kidnapper");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
@@ -150,17 +160,17 @@ public class Kidnapper implements Listener {
 
     private void kidnapbox(Player player) {
         player.launchProjectile(Snowball.class);
-        plugin.kidnapper_cooldown.put(player, 90.0);
+        snowballs.add(player.getUniqueId());
     }
 
     @EventHandler
-    public void launch(ProjectileLaunchEvent event) {
+    public void land(ProjectileHitEvent event) {
         if (event.getEntity() instanceof Snowball) {
             if (event.getEntity().getShooter() instanceof Player) {
                 Player player = (Player) event.getEntity().getShooter();
                 PlayerManagement management = new PlayerManagement(player);
                 if (management.getKit().equals("Kidnapper")) {
-                    event.getEntity().setCustomName(ChatColor.RED + player.getName() + ChatColor.WHITE + "'s Snowball");
+                    snowballs.remove(player.getUniqueId());
                 }
             }
         }
@@ -174,12 +184,12 @@ public class Kidnapper implements Listener {
                 if (projectile.getShooter() instanceof Player) {
                     Player shooter = (Player) projectile.getShooter();
                     PlayerManagement management = new PlayerManagement(shooter);
+                    if (management.getKit().equals("Kidnapper")) {
+                        Player victim = (Player) event.getEntity();
+                        sendtogulag(shooter, victim);
 
-                    if (management.getKit().equals("Kidnapper")){
-                        if (projectile.getCustomName().contains(shooter.getName())) {
-                            Player victim = (Player) event.getEntity();
-                            sendtogulag(shooter, victim);
-                        }
+                        CooldownManagement cooldowns = new CooldownManagement(shooter);
+                        cooldowns.setCooldown("Kidnapper", 80);
                     }
                 }
             }
@@ -195,6 +205,9 @@ public class Kidnapper implements Listener {
 
         shooter.teleport(gulagLocationforShooter);
         victim.teleport(gulagLocationforVictim);
+
+        Utils.playSound(shooter, Sound.WITHER_SPAWN);
+        Utils.playSound(victim, Sound.WITHER_SPAWN);
 
         prelocation.put(shooter, shooterLocation);
         prelocation.put(victim, victimLocation);
@@ -212,7 +225,7 @@ public class Kidnapper implements Listener {
 
         // Shooter message
         Utils.sendMessage(shooter, "&7");
-        Utils.sendMessage(shooter, "&4&lWELCOME TO THE GULAG");
+        Utils.sendMessage(shooter, "&8&l>> &4&lWELCOME TO THE GULAG &8&l<<");
         Utils.sendMessage(shooter, "&7You have been applied with &4Strength&7, you have 10 seconds to kill &c" + victim.getName() +
                 " &7before you are teleported back into the Arena.");
         Utils.sendMessage(shooter, "&7");

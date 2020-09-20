@@ -1,6 +1,7 @@
 package network.outflowkits.utils.runnables;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.Spawn;
 import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
@@ -54,7 +55,11 @@ public class SpawnRunnable extends BukkitRunnable {
                     plugin.spawn_warmup.remove(player);
                     plugin.spawn_warmup_location_x.remove(player);
                     plugin.spawn_warmup_location_z.remove(player);
-                    plugin.enderpearl_cooldown.remove(player);
+
+                    CooldownManagement cooldown = new CooldownManagement(player);
+                    if (cooldown.hasCooldown("Enderpearl_Cooldown")){
+                        cooldown.removeCooldown("Enderpearl_Cooldown");
+                    }
 
                     if (plugin.combat.containsKey(player)){
                         Utils.sendMessage(player, "&c&lYou may not teleport to Spawn while in combat!");

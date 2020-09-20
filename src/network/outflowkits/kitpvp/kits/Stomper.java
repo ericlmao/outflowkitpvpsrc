@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.*;
@@ -111,10 +112,10 @@ public class Stomper implements Listener {
                             Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                             return;
                         }
-                        if (plugin.stomper_cooldown.containsKey(event.getPlayer())){
-                            double time = plugin.stomper_cooldown.get(event.getPlayer());
-                            DecimalFormat df = new DecimalFormat("###,###.#");
-                            Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                        CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                        if (cooldowns.hasCooldown("Stomper")){
+                            long cooldown = cooldowns.getCooldown("Stomper");
+                            Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                             event.setCancelled(true);
                             return;
                         }
@@ -158,10 +159,10 @@ public class Stomper implements Listener {
                         Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                         return;
                     }
-                    if (plugin.stomper_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.stomper_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Stomper")){
+                        long cooldown = cooldowns.getCooldown("Stomper");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
@@ -202,7 +203,9 @@ public class Stomper implements Listener {
                     }
                     Utils.playSound(player.getLocation(), Sound.EXPLODE);
                     stomperCharge.remove(player);
-                    plugin.stomper_cooldown.put(player, 30.0);
+
+                    CooldownManagement cooldowns = new CooldownManagement(player);
+                    cooldowns.setCooldown("Stomper", 30);
                 }
             }
         }

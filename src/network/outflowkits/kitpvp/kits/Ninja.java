@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.*;
@@ -112,10 +113,10 @@ public class Ninja implements Listener {
                         Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                         return;
                     }
-                    if (plugin.ninja_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.ninja_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Ninja")){
+                        long cooldown = cooldowns.getCooldown("Ninja");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
@@ -129,7 +130,8 @@ public class Ninja implements Listener {
         Collection<Entity> sorroundingEntities = player.getNearbyEntities(6, 6, 6);
         for(Entity e : sorroundingEntities){
             if (e instanceof Player) {
-                plugin.ninja_cooldown.put(player, 35.0);
+                CooldownManagement cooldowns = new CooldownManagement(player);
+                cooldowns.setCooldown("Ninja", 35);
                 Player p = (Player) e;
                 if (p.getGameMode() == GameMode.SURVIVAL) {
                     double newX;
@@ -145,6 +147,9 @@ public class Ninja implements Listener {
                             p.getLocation().getY(), p.getLocation().getZ() - newZ, p.getLocation().getYaw(), p.getLocation().getPitch());
 
                     player.teleport(newDamagerLoc);
+
+                    Utils.playSound(player, Sound.ENDERMAN_TELEPORT);
+                    Utils.playSound(p, Sound.ENDERMAN_TELEPORT);
 
                     player.removePotionEffect(PotionEffectType.SPEED);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 5, 2));

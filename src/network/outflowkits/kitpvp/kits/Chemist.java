@@ -1,6 +1,7 @@
 package network.outflowkits.kitpvp.kits;
 
 import network.outflowkits.KitPvP;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.PlayerManagement;
 import network.outflowkits.utils.Utils;
 import org.bukkit.ChatColor;
@@ -147,15 +148,15 @@ public class Chemist implements Listener {
                         Utils.playSound(event.getPlayer(), Sound.VILLAGER_NO);
                         return;
                     }
-                    if (plugin.chemist_cooldown.containsKey(event.getPlayer())){
-                        double time = plugin.chemist_cooldown.get(event.getPlayer());
-                        DecimalFormat df = new DecimalFormat("###,###.#");
-                        Utils.sendMessage(event.getPlayer(), "&cPlease wait &e" + df.format(time) + " seconds &cbefore doing this again!");
+                    CooldownManagement cooldowns = new CooldownManagement(event.getPlayer());
+                    if (cooldowns.hasCooldown("Chemist")){
+                        long cooldown = cooldowns.getCooldown("Chemist");
+                        Utils.sendMessage(event.getPlayer(), "&8[&9Ability&8] &7Please wait &9" + cooldowns.formatCooldown(cooldown) + " &7before doing this again!");
                         event.setCancelled(true);
                         return;
                     }
+                    cooldowns.setCooldown("Chemist", 55);
                     smokeBombActivate(event.getPlayer());
-                    plugin.chemist_cooldown.put(event.getPlayer(), 45.0);
                 }
             }
         }
