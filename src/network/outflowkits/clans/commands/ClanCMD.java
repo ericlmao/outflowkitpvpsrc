@@ -3,6 +3,7 @@ package network.outflowkits.clans.commands;
 import net.md_5.bungee.api.chat.*;
 import network.outflowkits.KitPvP;
 import network.outflowkits.clans.ClansManager;
+import network.outflowkits.kitpvp.management.CooldownManagement;
 import network.outflowkits.kitpvp.management.Leaderboard;
 import network.outflowkits.utils.Utils;
 import org.bukkit.Bukkit;
@@ -370,6 +371,16 @@ public class ClanCMD implements CommandExecutor {
                 return true;
             }
             case "top":{
+                CooldownManagement cooldown = new CooldownManagement(player);
+
+                if (cooldown.hasCooldown("Leaderboard")){
+                    long current = cooldown.getCooldown("Leaderboard");
+
+                    Utils.sendMessage(player, "&cPlease wait &e" + cooldown.formatCooldown(current) + " &cbefore refreshing the leaderboard again!");
+                    return true;
+                }
+                cooldown.setCooldown("Leaderboard", 10);
+
                 Leaderboard leaderboard = new Leaderboard();
                 Utils.sendMessage(player, "&8&m-----------------------------------");
                 Utils.sendMessage(player, "&6&lOutflow Clans Leaderboard");
