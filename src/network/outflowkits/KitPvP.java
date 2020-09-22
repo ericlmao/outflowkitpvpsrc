@@ -6,6 +6,7 @@ import network.outflowkits.clans.listeners.ClanChatTag;
 import network.outflowkits.clans.listeners.ClanStatisticsListener;
 import network.outflowkits.data.ClansData;
 import network.outflowkits.data.CooldownData;
+import network.outflowkits.data.DonationData;
 import network.outflowkits.data.PlayerData;
 import network.outflowkits.kitpvp.commands.*;
 import network.outflowkits.kitpvp.commands.KitUnlocker;
@@ -58,6 +59,7 @@ public class KitPvP extends JavaPlugin {
     public PlayerScoreboard scoreboard;
     public PlayerData data;
     public CooldownData cooldowns;
+    public DonationData donations;
 
     // -- Clans -- \\
     public ClansData clansData;
@@ -220,6 +222,11 @@ public class KitPvP extends JavaPlugin {
         cooldowns.setupData();
         cooldowns.saveData();
         cooldowns.reloadData();
+
+        donations = new DonationData();
+        donations.setupData();
+        donations.saveData();
+        donations.reloadData();
     }
 
     @Override
