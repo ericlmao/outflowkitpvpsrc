@@ -97,6 +97,7 @@ public class KitPvP extends JavaPlugin {
         this.getCommand("convert").setExecutor(new ConvertCMD());
         this.getCommand("leaderboards").setExecutor(new LeaderboardCMD());
         this.getCommand("build").setExecutor(new BuildCMD());
+        this.getCommand("donate").setExecutor(new DonationCMD());
 
         this.getCommand("repair").setExecutor(new RepairCMD());
         this.getCommand("refill").setExecutor(new RefillCMD());

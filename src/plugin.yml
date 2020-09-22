@@ -56,6 +56,8 @@ commands:
     usage: /<command>
   target:
     usage: /<command>
+  donate:
+    usage: /<command>
   clans:
     aliases: [clan, f, faction, team, gang, g]
     usage: /<command>
